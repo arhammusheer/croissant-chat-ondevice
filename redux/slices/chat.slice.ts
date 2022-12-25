@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Room {
   id: string;
@@ -42,21 +42,21 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     // Room actions
-    addRoom: (state, action) => {
-      const room: Room = action.payload as Room;
+    addRoom: (state, action: PayloadAction<Room>) => {
+      const room = action.payload;
       state.rooms[room.id] = room;
     },
-    removeRoom: (state, action) => {
+    removeRoom: (state, action: PayloadAction<string>) => {
       const roomId: string = action.payload as string;
       delete state.rooms[roomId];
     },
-    updateRoom: (state, action) => {
+    updateRoom: (state, action: PayloadAction<Room>) => {
       const room: Room = action.payload as Room;
       state.rooms[room.id] = room;
     },
 
     // Message actions
-    addMessages: (state, action) => {
+    addMessages: (state, action: PayloadAction<Message[]>) => {
       const messages: Message[] = action.payload as Message[];
 
       // Add the messages to the room
@@ -73,7 +73,7 @@ const chatSlice = createSlice({
         }
       }
     },
-    addMessage: (state, action) => {
+    addMessage: (state, action: PayloadAction<Message>) => {
       const message: Message = action.payload as Message;
 
       // Add the message to the room
@@ -89,14 +89,20 @@ const chatSlice = createSlice({
       }
     },
 
-    removeMessage: (state, action) => {
+    removeMessage: (
+      state,
+      action: PayloadAction<{ roomId: string; messageId: string }>
+    ) => {
       const roomId: string = action.payload.roomId;
       const messageId: string = action.payload.messageId;
 
       // Remove the message from the room
       delete state.messages[roomId][messageId];
     },
-    updateMessage: (state, action) => {
+    updateMessage: (
+      state,
+      action: PayloadAction<{ roomId: string; message: Message }>
+    ) => {
       const roomId: string = action.payload.roomId;
       const message: Message = action.payload.message;
 
@@ -105,19 +111,23 @@ const chatSlice = createSlice({
     },
 
     // User actions
-    addUser: (state, action) => {
+    addUser: (state, action: PayloadAction<User>) => {
       const user: User = action.payload as User;
       state.users[user.id] = user;
     },
-    removeUser: (state, action) => {
+    removeUser: (state, action: PayloadAction<string>) => {
       const userId: string = action.payload as string;
       delete state.users[userId];
     },
-    updateUser: (state, action) => {
+    updateUser: (state, action: PayloadAction<User>) => {
       const user: User = action.payload as User;
       state.users[user.id] = user;
     },
   },
 });
+
+export const chatActions = {
+  ...chatSlice.actions,
+};
 
 export default chatSlice.reducer;
