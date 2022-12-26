@@ -29,6 +29,12 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "82feba30-f082-45a3-998c-578b49ddb87f"
+      }
+    },
+    "owner": "arhammusheer"
   }
 }

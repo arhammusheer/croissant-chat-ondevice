@@ -1,15 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
+import { useAppSelector } from "./hooks/useAppSelector";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import store from "./redux/store";
+import LandingScreen from "./screens/auth/LandingScreen";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;
@@ -17,10 +18,21 @@ export default function App() {
     return (
       <ReduxProvider store={store}>
         <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
+          <AuthCheckContainer />
           <StatusBar />
         </SafeAreaProvider>
       </ReduxProvider>
     );
   }
 }
+
+const AuthCheckContainer = () => {
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const colorScheme = useColorScheme();
+
+  if (isLoggedIn) {
+    return <Navigation colorScheme={colorScheme} />;
+  } else {
+    return <LandingScreen colorScheme={colorScheme} />;
+  }
+};
